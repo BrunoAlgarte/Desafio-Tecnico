@@ -1,12 +1,45 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Funcionários
+ *   description: Operações relacionadas aos funcionários
+ */
+
 const router = require('express').Router();
 const Funcionario = require('../models/Funcionario');
 
-// Rota POST para criar um novo funcionário
+/**
+ * @swagger
+ * /funcionario:
+ *   post:
+ *     summary: Cria um novo funcionário
+ *     tags: [Funcionários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               cargo:
+ *                 type: string
+ *               salario:
+ *                 type: number
+ *               desligado:
+ *                 type: boolean
+ *     responses:
+ *       '201':
+ *         description: Funcionário criado com sucesso
+ *       '422':
+ *         description: Informar um nome, cargo, salário e estado de desligado é obrigatório
+ */
 router.post('/', async (req, res) => {
     const { nome, cargo, salario, desligado } = req.body;
 
     if (!nome || !cargo || !salario || desligado === undefined) {
-        return res.status(422).json({ error: 'Informar um nome, cargo, salario e estado de desligado é obrigatório' });
+        return res.status(422).json({ error: 'Informar um nome, cargo, salário e estado de desligado é obrigatório' });
     }
 
     const funcionario = {
@@ -24,7 +57,16 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Rota GET para listar todos os funcionários
+/**
+ * @swagger
+ * /funcionario:
+ *   get:
+ *     summary: Lista todos os funcionários
+ *     tags: [Funcionários]
+ *     responses:
+ *       '200':
+ *         description: Lista de funcionários
+ */
 router.get('/', async (req, res) => {
     try {
         const funcionarios = await Funcionario.find();
@@ -34,7 +76,25 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Rota GET para listar um funcionário específico
+/**
+ * @swagger
+ * /funcionario/{id}:
+ *   get:
+ *     summary: Obtém um funcionário pelo ID
+ *     tags: [Funcionários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do funcionário a ser obtido
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Funcionário encontrado
+ *       '404':
+ *         description: Funcionário não encontrado
+ */
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -51,7 +111,40 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Rota PUT para atualizar um funcionário
+/**
+ * @swagger
+ * /funcionario/{id}:
+ *   put:
+ *     summary: Atualiza um funcionário pelo ID
+ *     tags: [Funcionários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do funcionário a ser atualizado
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               cargo:
+ *                 type: string
+ *               salario:
+ *                 type: number
+ *               desligado:
+ *                 type: boolean
+ *     responses:
+ *       '200':
+ *         description: Funcionário atualizado com sucesso
+ *       '404':
+ *         description: Funcionário não encontrado
+ */
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { nome, cargo, salario, desligado } = req.body;
@@ -76,7 +169,25 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Rota DELETE para deletar um funcionário
+/**
+ * @swagger
+ * /funcionario/{id}:
+ *   delete:
+ *     summary: Deleta um funcionário pelo ID
+ *     tags: [Funcionários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do funcionário a ser deletado
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Funcionário deletado com sucesso
+ *       '404':
+ *         description: Funcionário não encontrado
+ */
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
